@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Chess Arena</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♞</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="bar">
+      <h1>AI Chess Arena</h1>
+      <form id="setup">
+        <label>White <select id="white"></select></label>
+        <span class="vs" aria-hidden="true">vs</span>
+        <label>Black <select id="black"></select></label>
+        <label class="num">Games <input id="games" type="number" min="1" max="100" value="1" /></label>
+        <label class="num">Delay (s) <input id="delay" type="number" min="0" max="30" step="0.1" placeholder="1.0" /></label>
+        <button id="start" type="submit">Start</button>
+      </form>
+      <div class="controls">
+        <button id="pause" type="button">Pause</button>
+        <button id="resume" type="button">Resume</button>
+        <button id="abort" type="button" class="danger">Abort</button>
+      </div>
+      <p id="error" role="alert" hidden></p>
+    </header>
+
+    <main>
+      <section class="stage" aria-label="Board">
+        <div class="player" id="card-black"></div>
+        <div class="board-wrap">
+          <div id="board"></div>
+          <div id="banner" role="status" title="Click to hide" hidden>
+            <strong id="banner-result"></strong>
+            <span id="banner-reason"></span>
+          </div>
+        </div>
+        <div class="player" id="card-white"></div>
+      </section>
+
+      <aside class="panel">
+        <p id="series" hidden></p>
+        <h2>Scoresheet</h2>
+        <p class="legend">Superscript: failed attempts before the move. <span class="mark fb">R</span> random fallback.</p>
+        <ol id="moves"><li class="empty">Pick two players and press Start.</li></ol>
+        <dl class="meta">
+          <dt>To move</dt><dd id="turn">–</dd>
+          <dt>FEN</dt><dd><code id="fen">–</code></dd>
+        </dl>
+        <details id="raw-box">
+          <summary>Last reply <span id="raw-who"></span></summary>
+          <pre id="raw">No moves yet.</pre>
+        </details>
+        <nav class="exports" id="exports" hidden>
+          <a href="/api/game.pgn" download>Download PGN</a>
+          <a href="/api/game.json" download>Download JSON log</a>
+        </nav>
+      </aside>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

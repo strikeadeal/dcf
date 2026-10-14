@@ -1,0 +1,76 @@
+# Player definitions. Each key under `players` is an id shown in the UI dropdowns.
+# Edits apply on the next request; no restart needed.
+
+game:
+  max_plies: 200      # draw declared after this many half-moves
+  move_delay: 1.0     # seconds between moves so humans can follow (UI can override)
+
+# Applied to every LLM player (anthropic/openai); any player can override a key.
+llm_defaults:
+  max_retries: 3          # re-prompts after an illegal/unparseable/timed-out reply
+  on_failure: forfeit     # forfeit | random_legal_move, once retries are exhausted
+  timeout: 60             # seconds per attempt
+  reasoning: true         # allow reasoning before the final `MOVE: <SAN>` line
+
+players:
+  random:
+    type: random
+    name: Random mover
+
+  stockfish-5:
+    type: stockfish
+    name: Stockfish (skill 5)
+    path: stockfish       # name on PATH or full path (Debian/Ubuntu: /usr/games/stockfish)
+    skill_level: 5        # 0-20
+    think_time: 0.1       # seconds per move
+
+  stockfish-max:
+    type: stockfish
+    name: Stockfish (full strength)
+    skill_level: 20
+    think_time: 1.0
+
+  # Claude. `temperature` is not accepted by current Claude models; leave it out.
+  # `effort` (low | medium | high | xhigh | max) trades thinking depth for latency and cost.
+  claude-opus:
+    type: anthropic
+    name: Claude Opus 5.5
+    model: claude-opus-5-5
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 16000     # thinking counts toward this
+    effort: medium
+
+  claude-sonnet:
+    type: anthropic
+    name: Claude Sonnet 5.5
+    model: claude-sonnet-5-5
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 16000
+    effort: medium
+
+  claude-haiku:
+    type: anthropic
+    name: Claude Haiku 5.5
+    model: claude-haiku-5-5
+    api_key_env: ANTHROPIC_API_KEY
+    max_tokens: 16000
+    effort: medium
+
+  # OpenAI. Check current model IDs at https://platform.openai.com/docs/models
+  # Reasoning models reject a custom temperature, so it is left out here.
+  gpt:
+    type: openai
+    name: GPT-5 mini
+    model: gpt-5-mini     # verify this ID is current before use
+    api_key_env: OPENAI_API_KEY
+    max_tokens: 16000
+
+  # Any OpenAI-compatible server. Ollama: `ollama pull llama3.1` then `ollama serve`.
+  ollama-llama:
+    type: openai
+    name: Llama 3.1 8B (Ollama)
+    model: llama3.1
+    base_url: http://localhost:11434/v1
+    max_tokens: 1024
+    temperature: 0.2
+    timeout: 120
